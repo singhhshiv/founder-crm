@@ -1339,19 +1339,30 @@
 They are a ${c.type || 'contact'}.${c.met ? ' They met at: ' + c.met + '.' : ''}${c.notes ? ' Notes from last conversation: ' + c.notes : ''}
 Keep it under 4 sentences. Casual and genuine, not salesy. No subject line. Just the message body.`;
 
+    const firstName = (c.name || 'there').trim().split(/\s+/)[0] || 'there';
+    const localDraft = `Hi ${firstName}, it was great connecting recently${c.company ? ` and hearing about ${c.company}` : ''}. I've been thinking about our conversation and would love to stay in touch. Let me know how things are going on your end!`;
+
+    let text = '';
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     try {
       const res = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
+        body: JSON.stringify({ prompt }),
+        signal: controller.signal,
       });
-      const data = await res.json();
-      const text = data?.text || 'Could not generate message.';
-      document.getElementById('d-draft-text').textContent = text.trim();
-    } catch(e) {
-      document.getElementById('d-draft-text').textContent = 'Error generating message. Check your API key.';
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.text) throw new Error(data?.error || 'Gemini request failed');
+      text = data.text.trim();
+    } catch (e) {
+      console.warn('AI follow-up unavailable; using local draft.', e);
+      text = localDraft;
+    } finally {
+      clearTimeout(timeout);
     }
 
+    document.getElementById('d-draft-text').textContent = text;
     btn.textContent = '✨ Draft follow-up message';
     btn.disabled = false;
     document.getElementById('d-draft').style.display = 'block';
