@@ -631,6 +631,140 @@
     .fu-badge-red { background: rgba(220,38,38,0.1); color: var(--red); }
     .fu-badge-amber { background: rgba(217,119,6,0.1); color: var(--amber); }
     .fu-badge-green { background: rgba(27,67,50,0.1); color: var(--green); }
+
+    /* ─── DASHBOARD REFRESH ─── */
+    .dashboard-hero {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3vw, 36px);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      font-weight: 650;
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .sync-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.6);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.14); }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 10px rgba(17,17,17,0.025);
+    }
+
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      right: -18px;
+      bottom: -28px;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: var(--kpi-tint, rgba(27,67,50,0.08));
+    }
+
+    .kpi-label { color: var(--muted); font-size: 12px; font-weight: 500; }
+    .kpi-value { color: var(--text); font-size: 28px; font-weight: 650; letter-spacing: -0.04em; margin-top: 8px; }
+    .kpi-note { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+    .controls-card {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .toolbar-top, .filter-row { display: flex; align-items: center; gap: 8px; }
+    .toolbar-top { margin-bottom: 12px; }
+    .toolbar-top .search-wrap { max-width: none; }
+    .filter-row { flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--border); }
+    .filter-label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 4px; }
+    .filter-btn { padding: 7px 11px; }
+    .select-control {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font: 500 12px var(--sans);
+      padding: 8px 28px 8px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+    .select-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(27,67,50,0.08); }
+    .results-summary { color: var(--muted); font-size: 12px; margin-left: auto; white-space: nowrap; }
+    .btn:disabled, .action-btn:disabled { cursor: not-allowed; opacity: 0.5; }
+
+    .table-heading { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 0; }
+    .table-heading-title { font-size: 13px; font-weight: 650; }
+    .table-heading-hint { color: var(--muted); font-size: 12px; }
+    .table-scroll { overflow-x: auto; }
+    .empty-state { min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 900px) {
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .toolbar-top { flex-wrap: wrap; }
+      .toolbar-top .search-wrap { flex-basis: 100%; order: -1; }
+      .results-summary { margin-left: 0; }
+    }
+
+    @media (max-width: 600px) {
+      .dashboard-hero { align-items: flex-start; flex-direction: column; gap: 14px; }
+      .kpi-grid { gap: 8px; }
+      .kpi-card { padding: 13px; }
+      .kpi-value { font-size: 24px; }
+      .controls-card { padding: 10px; }
+      .toolbar-top { align-items: stretch; }
+      .toolbar-top .select-control, .toolbar-top .btn { flex: 1; }
+      .table-heading { padding-inline: 12px; }
+      th, td { padding-inline: 12px; }
+    }
   </style>
 </head>
 <body>
@@ -691,43 +825,96 @@
 
     <!-- CONTACTS TAB -->
     <div id="tab-contacts">
-      <div class="page-header">
+      <div class="dashboard-hero">
         <div>
-          <div class="page-title">Contacts</div>
-          <div class="page-sub">Track everyone that matters to your journey</div>
+          <div class="eyebrow">Relationship workspace</div>
+          <div class="hero-title">Your founder network</div>
+          <div class="hero-sub">Keep the right people warm and every next step visible.</div>
         </div>
-        <button class="btn btn-primary" onclick="openModal()">+ Add Contact</button>
+        <div class="sync-status"><span class="sync-dot"></span>Synced to your account</div>
       </div>
 
-      <div class="toolbar">
-        <div class="search-wrap">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="search-input" placeholder="Search contacts..." oninput="filterContacts()" />
+      <div class="kpi-grid" aria-label="Contact summary">
+        <div class="kpi-card" style="--kpi-tint:rgba(27,67,50,0.10)">
+          <div class="kpi-label">Total contacts</div>
+          <div class="kpi-value" id="kpi-total">0</div>
+          <div class="kpi-note">Across your network</div>
         </div>
-        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
-        <button class="filter-btn" onclick="setFilter('investor', this)">Investors</button>
-        <button class="filter-btn" onclick="setFilter('founder', this)">Founders</button>
-        <button class="filter-btn" onclick="setFilter('customer', this)">Customers</button>
+        <div class="kpi-card" style="--kpi-tint:rgba(220,38,38,0.10)">
+          <div class="kpi-label">Overdue</div>
+          <div class="kpi-value" id="kpi-overdue">0</div>
+          <div class="kpi-note">Need attention now</div>
+        </div>
+        <div class="kpi-card" style="--kpi-tint:rgba(217,119,6,0.12)">
+          <div class="kpi-label">Due this week</div>
+          <div class="kpi-value" id="kpi-week">0</div>
+          <div class="kpi-note">Planned next actions</div>
+        </div>
+        <div class="kpi-card" style="--kpi-tint:rgba(206,255,26,0.20)">
+          <div class="kpi-label">Needs a plan</div>
+          <div class="kpi-value" id="kpi-unplanned">0</div>
+          <div class="kpi-note">No follow-up date yet</div>
+        </div>
+      </div>
+
+      <div class="controls-card" aria-label="Contact filters">
+        <div class="toolbar-top">
+          <div class="search-wrap">
+            <label class="sr-only" for="search-input">Search contacts</label>
+            <span class="search-icon">⌕</span>
+            <input type="text" id="search-input" placeholder="Search name, company, email, or notes…" oninput="filterContacts()" />
+          </div>
+          <label class="sr-only" for="status-filter">Filter by status</label>
+          <select class="select-control" id="status-filter" onchange="applyFilters()">
+            <option value="all">Any status</option>
+            <option value="overdue">Overdue</option>
+            <option value="due-soon">Due this week</option>
+            <option value="no-follow-up">No follow-up</option>
+          </select>
+          <label class="sr-only" for="sort-select">Sort contacts</label>
+          <select class="select-control" id="sort-select" onchange="applyFilters()">
+            <option value="recent">Recently contacted</option>
+            <option value="follow-up">Next follow-up</option>
+            <option value="name">Name A–Z</option>
+          </select>
+          <button class="btn btn-ghost" id="clear-filters" onclick="clearFilters()" disabled>Clear</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Focus</span>
+          <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">Everyone</button>
+          <button class="filter-btn" data-filter="investor" onclick="setFilter('investor', this)">Investors</button>
+          <button class="filter-btn" data-filter="founder" onclick="setFilter('founder', this)">Founders</button>
+          <button class="filter-btn" data-filter="customer" onclick="setFilter('customer', this)">Customers</button>
+          <button class="filter-btn" data-filter="partner" onclick="setFilter('partner', this)">Partners</button>
+          <span class="results-summary" id="results-summary">Showing 0 contacts</span>
+        </div>
       </div>
 
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Last Contact</th>
-              <th>Next Action</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="contacts-table">
-          </tbody>
-        </table>
+        <div class="table-heading">
+          <div class="table-heading-title">People in your orbit</div>
+          <div class="table-heading-hint">Select a row to open details</div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Last Contact</th>
+                <th>Next Action</th>
+                <th>Status</th>
+                <th><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="contacts-table">
+            </tbody>
+          </table>
+        </div>
         <div id="empty-state" class="empty-state">
-          <div class="icon">👋</div>
-          <p>No contacts yet — add someone you met recently.</p>
+          <div class="icon">✦</div>
+          <p>No contacts match these filters.</p>
+          <button class="btn btn-ghost" style="margin-top:14px;" onclick="clearFilters()">Reset filters</button>
         </div>
       </div>
     </div>
@@ -862,6 +1049,7 @@
 
   let contacts = [];
   let currentFilter = 'all';
+  let currentStatusFilter = 'all';
   let currentDetailId = null;
   let editingId = null;
   let authMode = 'login';
@@ -884,10 +1072,21 @@
     }));
     renderTable();
     document.getElementById('contact-count').textContent = contacts.length;
+    updateDashboardStats();
   }
 
   function initials(name) {
-    return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    return (name || '?').split(' ').filter(Boolean).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>'"]/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[char]));
+  }
+
+  function safeId(value) {
+    return String(value ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
   }
 
   function avatarColor(name) {
@@ -916,47 +1115,87 @@
     return { dot: 'dot-green', label: `In ${days}d` };
   }
 
+  function getFilteredContacts() {
+    const search = (document.getElementById('search-input').value || '').trim().toLowerCase();
+    const statusFilter = currentStatusFilter;
+    const filtered = contacts.filter(c => {
+      const haystack = [c.name, c.company, c.email, c.met, c.notes].filter(Boolean).join(' ').toLowerCase();
+      const days = daysUntil(c.next);
+      const matchType = currentFilter === 'all' || c.type === currentFilter;
+      const matchSearch = !search || haystack.includes(search);
+      const matchStatus = statusFilter === 'all'
+        || (statusFilter === 'overdue' && days !== null && days < 0)
+        || (statusFilter === 'due-soon' && days !== null && days >= 0 && days <= 7)
+        || (statusFilter === 'no-follow-up' && days === null);
+      return matchType && matchSearch && matchStatus;
+    });
+
+    const sort = document.getElementById('sort-select')?.value || 'recent';
+    return filtered.sort((a, b) => {
+      if (sort === 'name') return (a.name || '').localeCompare(b.name || '');
+      if (sort === 'follow-up') {
+        if (!a.next && !b.next) return 0;
+        if (!a.next) return 1;
+        if (!b.next) return -1;
+        return new Date(a.next) - new Date(b.next);
+      }
+      return new Date(b.last || 0) - new Date(a.last || 0);
+    });
+  }
+
   function renderTable() {
     const tbody = document.getElementById('contacts-table');
     const empty = document.getElementById('empty-state');
-    const search = document.getElementById('search-input').value.toLowerCase();
+    const filtered = getFilteredContacts();
+    const clearButton = document.getElementById('clear-filters');
+    const hasFilters = currentFilter !== 'all' || currentStatusFilter !== 'all'
+      || document.getElementById('search-input').value.trim() || document.getElementById('sort-select').value !== 'recent';
 
-    const filtered = contacts.filter(c => {
-      const matchFilter = currentFilter === 'all' || c.type === currentFilter;
-      const matchSearch = !search || c.name.toLowerCase().includes(search) || (c.company || '').toLowerCase().includes(search);
-      return matchFilter && matchSearch;
-    });
+    document.getElementById('results-summary').textContent = `Showing ${filtered.length} of ${contacts.length} contact${contacts.length === 1 ? '' : 's'}`;
+    clearButton.disabled = !hasFilters;
 
     if (filtered.length === 0) {
       tbody.innerHTML = '';
       empty.style.display = 'block';
+      empty.querySelector('p').textContent = contacts.length ? 'No contacts match these filters.' : 'No contacts yet — add someone you met recently.';
       return;
     }
 
     empty.style.display = 'none';
     tbody.innerHTML = filtered.map(c => {
       const status = statusFor(c);
+      const id = safeId(c.id);
       return `
-        <tr onclick="window._openDetail('${c.id}')">
+        <tr onclick="window._openDetail('${id}')">
           <td>
             <div class="contact-cell">
-              <div class="avatar" style="background:${avatarColor(c.name)}">${initials(c.name)}</div>
+              <div class="avatar" style="background:${avatarColor(c.name)}">${escapeHtml(initials(c.name))}</div>
               <div>
-                <div class="contact-name">${c.name}</div>
-                <div class="contact-company">${c.company || ''}</div>
+                <div class="contact-name">${escapeHtml(c.name)}</div>
+                <div class="contact-company">${escapeHtml(c.company || '')}</div>
               </div>
             </div>
           </td>
-          <td><span class="tag tag-${c.type}">${c.type}</span></td>
+          <td><span class="tag tag-${escapeHtml(c.type)}">${escapeHtml(c.type)}</span></td>
           <td style="color:var(--muted);font-size:13px;">${formatDate(c.last)}</td>
           <td style="color:var(--muted);font-size:13px;">${formatDate(c.next)}</td>
-          <td><span class="status-dot"><span class="dot ${status.dot}"></span>${status.label}</span></td>
+          <td><span class="status-dot"><span class="dot ${status.dot}"></span>${escapeHtml(status.label)}</span></td>
           <td>
-            <button class="action-btn" onclick="event.stopPropagation();window._deleteContact('${c.id}')" title="Delete">🗑</button>
+            <button class="action-btn" onclick="event.stopPropagation();window._deleteContact('${id}')" title="Delete">🗑</button>
           </td>
         </tr>
       `;
     }).join('');
+  }
+
+  function updateDashboardStats() {
+    const overdue = contacts.filter(c => { const d = daysUntil(c.next); return d !== null && d < 0; }).length;
+    const week = contacts.filter(c => { const d = daysUntil(c.next); return d !== null && d >= 0 && d <= 7; }).length;
+    const unplanned = contacts.filter(c => !c.next).length;
+    document.getElementById('kpi-total').textContent = contacts.length;
+    document.getElementById('kpi-overdue').textContent = overdue;
+    document.getElementById('kpi-week').textContent = week;
+    document.getElementById('kpi-unplanned').textContent = unplanned;
   }
 
   function openModal() {
@@ -1001,6 +1240,8 @@
     const name = document.getElementById('f-name').value.trim();
     if (!name) { alert('Name is required'); return; }
 
+    const savedEditingId = editingId;
+
     const btn = document.getElementById('modal-save-btn');
     const originalText = btn.textContent;
     btn.textContent = 'Saving...';
@@ -1020,8 +1261,8 @@
     };
 
     let error;
-    if (editingId) {
-      ({ error } = await db.from('contacts').update(payload).eq('id', editingId));
+    if (savedEditingId) {
+      ({ error } = await db.from('contacts').update(payload).eq('id', savedEditingId));
     } else {
       ({ error } = await db.from('contacts').insert(payload));
     }
@@ -1032,7 +1273,7 @@
     if (error) { alert('Error saving: ' + error.message); return; }
     closeModal();
     await loadContacts();
-    if (editingId && currentDetailId === editingId) openDetail(editingId);
+    if (savedEditingId && currentDetailId === savedEditingId) openDetail(savedEditingId);
   }
 
   async function deleteContact(id) {
@@ -1068,6 +1309,21 @@
     currentFilter = f;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
+    renderTable();
+  }
+
+  function applyFilters() {
+    currentStatusFilter = document.getElementById('status-filter').value;
+    renderTable();
+  }
+
+  function clearFilters() {
+    currentFilter = 'all';
+    currentStatusFilter = 'all';
+    document.getElementById('search-input').value = '';
+    document.getElementById('status-filter').value = 'all';
+    document.getElementById('sort-select').value = 'recent';
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
     renderTable();
   }
 
@@ -1246,6 +1502,8 @@ Keep it under 4 sentences. Casual and genuine, not salesy. No subject line. Just
   window.saveContact = saveContact;
   window.closeDetail = closeDetail;
   window.setFilter = setFilter;
+  window.applyFilters = applyFilters;
+  window.clearFilters = clearFilters;
   window.filterContacts = () => renderTable();
   window.draftFollowUp = draftFollowUp;
   window.doLogin = doLogin;
